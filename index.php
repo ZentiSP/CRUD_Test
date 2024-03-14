@@ -25,15 +25,24 @@ if (isset($_GET['delete'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Website</title>
+    <title>Code test Website</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <style>
+        .container{
+            max-width: 950px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
-
-
+    <!-- Modal add user -->
     <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -69,7 +78,7 @@ if (isset($_GET['delete'])) {
                             <label for="classyear" class="col-form-label">Year</label>
                         </div>
                         <div class="mb-3">
-                            <label for="birthday" class="col-form-label">Brithday</label>
+                            <label for="birthday" class="col-form-label">Brithday "mm/dd/yyyy"</label>
                             <input type="date" class="form-control" name="birthday" required>
                         </div>
                         <div class="mb-3">
@@ -88,20 +97,25 @@ if (isset($_GET['delete'])) {
         </div>
     </div>
 
+    <!-- Header -->
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6">
-                <h1>CRUD Website</h1>
+                <!-- Website header text -->
+                <a href="index.php"><h1>User data</h1> </a>
             </div>
         </div>
+        <!-- Search & add user tab bar -->
         <div class="container text-center">
             <div class="row">
+                <!-- Search tab -->
                 <div class="col-md-6">
                     <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-primary" type="submit">Search</button>
                     </form>
                 </div>
+                <!-- Add user button -->
                 <div class="col-md-6 d-flex justify-content-end">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal"
                         data-bs-whatever="@mdo" style=" --bs-btn-padding-x: .5rem;">Add
@@ -129,10 +143,10 @@ if (isset($_GET['delete'])) {
             </div>
         <?php } ?>
 
-        <table class="table">
-            <thead>
+        <table class="table table-bordered">
+            <thead class="table-primary">
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">ID</th>
                     <th scope="col">Firstname</th>
                     <th scope="col">Lastname</th>
                     <th scope="col">Classyear</th>
@@ -141,16 +155,26 @@ if (isset($_GET['delete'])) {
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-light">
                 <?php
                 $stmt = $conn->query("SELECT * FROM user");
                 $stmt->execute();
                 $users = $stmt->fetchAll();
 
+                if (isset($_GET['search']) == !'') {
+                    echo 'Search : '. $_GET['search'] .'';
+                    $search = $_GET['search'];
+                    $searchStmt = $conn->query("SELECT * FROM user WHERE id like '%$search%' or firstname like '%$search%' or lastname like '%$search%'");
+                    $searchStmt->execute();
+                    $users = $searchStmt->fetchAll();
+                }
+
                 if (!$users) {
                     echo "<p><td colspan='6' class='text-center'>No data available</td></p>";
-                } else {
-                    foreach ($users as $user) {
+                }?>
+                
+                <?php
+                foreach ($users as $user) {
                         ?>
                         <tr>
                             <th scope="row">
@@ -175,8 +199,7 @@ if (isset($_GET['delete'])) {
                                     href="?delete=<?php echo $user['id']; ?>" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
-                    <?php }
-                } ?>
+                    <?php }?>
             </tbody>
         </table>
     </div>

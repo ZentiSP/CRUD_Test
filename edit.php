@@ -70,7 +70,7 @@ if (isset($_POST['update'])) {
 </head>
 
 <body>
-    <div class="container mt-5">
+    <div class="container mt-5 bg-light">
         <h1>Edit Data</h1>
         <hr>
         <form action="edit.php" method="post" enctype="multipart/form-data">
@@ -98,7 +98,8 @@ if (isset($_POST['update'])) {
             <div class="mb-3 form-floating">
                 <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
                     name="classyear" required>
-                    <option selected>Select year :"
+                    <option value="<?php echo $data['classyear']; ?>" selected>Current year :
+                        <?php echo $data['classyear']; ?>
                     </option>
                     <option value="1">Year 1</option>
                     <option value="2">Year 2</option>
@@ -109,19 +110,24 @@ if (isset($_POST['update'])) {
             </div>
             <div class="mb-3">
                 <label for="birthday" class="col-form-label">Brithday</label>
-                <input type="date" class="form-control" value="<?php echo $data['birthday']; ?>" name="birthday" required>
+                <input type="date" class="form-control" value="<?php echo $data['birthday']; ?>" name="birthday"
+                    required>
             </div>
             <div class="mb-3">
                 <label for="img" class="col-form-label">Image:</label>
                 <input type="file" class="form-control" id="imginput" name="img">
-                <img width="100%" src="uploads/<?php echo $data['img']; ?>" id="previewimg" alt="">
+                <img width="100%" src="uploads/<?php echo $data['img']; ?>" id="previewimg"
+                    class="rounded mx-auto d-block mt-3" alt="">
             </div>
             <hr>
-            <a href="index.php" class="btn btn-secondary">Go Back</a>
-            <button type="submit" name="update" class="btn btn-primary">Update</button>
+            <div class="mb-3">
+                <a href="index.php" class="btn btn-secondary">Go Back</a>
+                <button type="submit" name="update" class="btn btn-primary">Update</button>
+            </div>
         </form>
     </div>
 
+    <!-- Preview img function -->
     <script>
         let imgInput = document.getElementById('imginput');
         let previewImg = document.getElementById('previewimg');
