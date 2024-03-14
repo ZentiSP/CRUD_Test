@@ -4,6 +4,20 @@ session_start();
 
 require_once "config/db.php";
 
+$search = '';
+
+$stmt = $conn->query("SELECT * FROM user");
+$stmt->execute();
+$users = $stmt->fetchAll();
+
+if (isset($_GET['search']) == !'') {
+    echo 'Search : ' . $_GET['search'] . '';
+    $search = $_GET['search'];
+    $searchStmt = $conn->query("SELECT * FROM user WHERE id like '%$search%' or firstname like '%$search%' or lastname like '%$search%'");
+    $searchStmt->execute();
+    $users = $searchStmt->fetchAll();
+}
+
 if (isset($_GET['delete'])) {
     $delete_id = $_GET['delete'];
     $deletestmt = $conn->query("DELETE FROM user WHERE id = $delete_id");
@@ -14,9 +28,7 @@ if (isset($_GET['delete'])) {
         $_SESSION['success'] = "Data has been deleted succesfully";
         header("refresh:1; url=index.php");
     }
-
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +43,7 @@ if (isset($_GET['delete'])) {
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <style>
-        .container{
+        .container {
             max-width: 950px;
         }
 
@@ -102,7 +114,9 @@ if (isset($_GET['delete'])) {
         <div class="row">
             <div class="col-md-6">
                 <!-- Website header text -->
-                <a href="index.php"><h1>User data</h1> </a>
+                <a href="index.php">
+                    <h1>User data</h1>
+                </a>
             </div>
         </div>
         <!-- Search & add user tab bar -->
@@ -111,7 +125,8 @@ if (isset($_GET['delete'])) {
                 <!-- Search tab -->
                 <div class="col-md-6">
                     <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search">
+                        <input class="form-control me-2" type="search" name="search" placeholder="Search"
+                            value="<?php echo $search ?>" aria-label="Search">
                         <button class="btn btn-outline-primary" type="submit">Search</button>
                     </form>
                 </div>
@@ -157,24 +172,10 @@ if (isset($_GET['delete'])) {
             </thead>
             <tbody class="table-light">
                 <?php
-                $stmt = $conn->query("SELECT * FROM user");
-                $stmt->execute();
-                $users = $stmt->fetchAll();
-
-                if (isset($_GET['search']) == !'') {
-                    echo 'Search : '. $_GET['search'] .'';
-                    $search = $_GET['search'];
-                    $searchStmt = $conn->query("SELECT * FROM user WHERE id like '%$search%' or firstname like '%$search%' or lastname like '%$search%'");
-                    $searchStmt->execute();
-                    $users = $searchStmt->fetchAll();
-                }
-
                 if (!$users) {
                     echo "<p><td colspan='6' class='text-center'>No data available</td></p>";
-                }?>
-                
-                <?php
-                foreach ($users as $user) {
+                } else {
+                    foreach ($users as $user) {
                         ?>
                         <tr>
                             <th scope="row">
@@ -199,7 +200,8 @@ if (isset($_GET['delete'])) {
                                     href="?delete=<?php echo $user['id']; ?>" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
-                    <?php }?>
+                    <?php }
+                } ?>
             </tbody>
         </table>
     </div>
