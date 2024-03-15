@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-
 require_once "config/db.php";
 
 $search = '';
@@ -10,10 +9,9 @@ $stmt = $conn->query("SELECT * FROM user");
 $stmt->execute();
 $users = $stmt->fetchAll();
 
-if (isset($_GET['search']) == !'') {
-    echo 'Search : ' . $_GET['search'] . '';
+if (isset($_GET['search'])) {
     $search = $_GET['search'];
-    $searchStmt = $conn->query("SELECT * FROM user WHERE id like '%$search%' or firstname like '%$search%' or lastname like '%$search%'");
+    $searchStmt = $conn->query("SELECT * FROM user WHERE id like '%$search%' or firstname like '%$search%' or lastname like '%$search%' or classyear like '%$search%'");
     $searchStmt->execute();
     $users = $searchStmt->fetchAll();
 }
@@ -29,13 +27,13 @@ if (isset($_GET['delete'])) {
         header("refresh:1; url=index.php");
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code test Website</title>
 
@@ -67,13 +65,13 @@ if (isset($_GET['delete'])) {
                         <div class="mb-3 row g-2">
                             <div class="col-md">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="firstname" placeholder="" required>
+                                    <input type="text" class="form-control" name="firstname" placeholder="Input firstname" required>
                                     <label for="firstname" class="col-form-label">First Name</label>
                                 </div>
                             </div>
                             <div class="col-md">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="lastname" placeholder="" required>
+                                    <input type="text" class="form-control" name="lastname" placeholder="Input lastname" required>
                                     <label for="lastname" class="col-form-label">Last Name</label>
                                 </div>
                             </div>

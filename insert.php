@@ -1,6 +1,8 @@
 <?php
+
     session_start();
     require_once "config/db.php";
+
     if (isset($_POST['submit'])) {
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
@@ -27,7 +29,7 @@
 
                     if ($sql) {
                         $_SESSION['success'] = "Data has been inserted Succesfully";
-                        header("location: index.php");
+                        header("location: index.php");  
                     } else {
                         $_SESSION['error'] = "Data has not been inserted Succesfully";
                         header("location: index.php");
